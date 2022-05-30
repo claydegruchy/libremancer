@@ -169,7 +169,7 @@ var searchable = grid[0];
 
 // var result = patternSearch(searchable, "lmao");
 
-var result = bookSearch(grid, "cjcdircjhvvrhnkjjlffevivedlrkkgg");
+var result = bookSearch(grid, "jesus");
 console.log(result);
 // console.log(searchable);
 // console.log(searchable.map((l) => l.join(",")).join("\n"));
