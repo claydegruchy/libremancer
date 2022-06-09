@@ -79,7 +79,7 @@ function App() {
   // };
 
   const Table = ({ page, data2d = [], highlights }) => {
-    console.log({ highlights });
+    // console.log({ highlights });
     return (
       <table>
         {/*   <thead>
@@ -126,7 +126,11 @@ function App() {
               {d1.map((d2, y) => {
                 var h = "";
 
-                return <td onClick={()=>setcurrentPage(d2)} className={``}>{d2}</td>;
+                return (
+                  <td onClick={() => setcurrentPage(d2)} className={``}>
+                    {d2}
+                  </td>
+                );
               })}
             </tr>
           ))}
@@ -145,6 +149,7 @@ function App() {
   return (
     <div className="App">
       <div></div>
+      <div>Current book: "Harry Potter"</div>
       <div>
         <label htmlFor={"searchQuery"}>Search Query</label>
         <input
@@ -152,15 +157,16 @@ function App() {
           type={"text"}
           onChange={(e) => setSearchQuery(e.target.value.toUpperCase())}
           value={searchQuery}
-          placeholder={"searchQuery"}
+          placeholder={"Will search for each word"}
         />
       </div>
-      searchQuery
+
       <div>
         <div>
           currentPage:{currentPage + 1}/{book.length}
         </div>
         <div
+          className={"button"}
           onClick={(e) =>
             setcurrentPage(currentPage >= 0 ? currentPage + 1 : currentPage)
           }
@@ -168,6 +174,7 @@ function App() {
           Next page
         </div>
         <div
+          className={"button"}
           onClick={(e) =>
             setcurrentPage(currentPage > 0 ? currentPage - 1 : currentPage)
           }
@@ -176,36 +183,32 @@ function App() {
         </div>
       </div>
 
-      <div>  <div>
-            <SmallTable
-              data2d={[
-                book
-                  .map((b, i) => i)
-                  .filter((i) =>
-                    highlights
-                      .flat()
-                      .flat()
-                      .map((g) => g.page)
-                      .includes(i)
-                  ),
-              ]}
-            />
-          </div>
-
-          <div>
-            {terms.map((term, i) => (
-              <div>
-                {term}: {highlights[i]?.length || 0}
-              </div>
-            ))}
-          </div>
-</div>
-
-        
-      
       <div>
+        <div>
+          <SmallTable
+            data2d={[
+              book
+                .map((b, i) => i)
+                .filter((i) =>
+                  highlights
+                    .flat()
+                    .flat()
+                    .map((g) => g.page)
+                    .includes(i)
+                ),
+            ]}
+          />
+        </div>
+        <div>
+          {terms.map((term, i) => (
+            <div>
+              {term}: {highlights[i]?.length || 0}
+            </div>
+          ))}
+        </div>
+      </div>
 
-
+      <div>
         <div>Table</div>
         <div>
           <Table
@@ -213,7 +216,6 @@ function App() {
             data2d={book[currentPage]}
             highlights={highlights}
           />
-
         </div>
       </div>
     </div>
