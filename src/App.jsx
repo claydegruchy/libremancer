@@ -13,7 +13,7 @@ function App() {
   const [currentPage, setcurrentPage] = useState(0);
   const [terms, setterms] = useState([]);
   const [highlights, sethighlights] = useState([]);
-
+  // console.log(highlights)
   useEffect(() => {
     if (!book || !searchQuery) return;
     var result = searchQuery.split(" ").filter((word) => word.length >= 2);
@@ -22,6 +22,7 @@ function App() {
 
   useEffect(() => {
     if (!book || !searchQuery) return;
+
     sethighlights(terms.map((word) => bookSearch({ pageArray: book, word })));
   }, [terms]);
 
@@ -37,46 +38,9 @@ function App() {
     // generateBookArray
   }, []);
 
-  console.log({ book });
+  // console.log({ book });
 
   if (!book) return <div>Loading!</div>;
-
-  // console.log(bookSearch({ pageArray: book, word: "cunt" }));
-
-  // const SearchableDropdown = ({ label, options, selectParams }) => {
-  //   const set = (e) => setUiOptions({ ...uiOptions, [label]: e });
-  //   return (
-  //     <div>
-  //       {/*this select package really fucking sucks ass, the style application
-  //        system is garbo and akin to banging rocks together */}
-  //       <Select
-  //         // isClearable
-  //         {...selectParams}
-  //         // placeholder={''}
-  //         value={uiOptions[label]}
-  //         onChange={set}
-  //         // theme={themes[uiOptions.selectedTheme.value]}
-  //         // styles={dropDownStyles}
-  //         options={options}
-  //       />
-  //     </div>
-  //   );
-  // };
-  // const Checkbox = ({ label, secretMessage }) => {
-  //   const set = (e) =>
-  //     setUiOptions({ ...uiOptions, [label]: !uiOptions[label] });
-  //   return (
-  //     <div title={secretMessage}>
-  //       <input
-  //         name={label}
-  //         type='checkbox'
-  //         checked={uiOptions[label]}
-  //         onChange={set}
-  //       />
-  //       <div>{label}</div>
-  //     </div>
-  //   );
-  // };
 
   const Table = ({ page, data2d = [], highlights }) => {
     // console.log({ highlights });
@@ -139,12 +103,12 @@ function App() {
     );
   };
 
-  console.log({
-    ok: highlights
-      .flat()
-      .flat()
-      .map((g) => g.page),
-  });
+  // console.log({
+  //   ok: highlights
+  //     .flat()
+  //     .flat()
+  //     .map((g) => g.page),
+  // });
 
   return (
     <div className="App">
@@ -189,13 +153,54 @@ function App() {
             data2d={[
               book
                 .map((b, i) => i)
-                .filter((i) =>
-                  highlights
-                    .flat()
-                    .flat()
-                    .map((g) => g.page)
-                    .includes(i)
-                ),
+                .filter((i) => {
+                  var flat = highlights.flat().flat();
+// console.log(flat
+                    // .map((s) => s.page))
+                  var pages = flat
+                    .map((s) => s.page)
+                    .reduce((a, v) => ({ ...a, [`p${v}`]: [] }), {});
+                  var rel = [];
+                  for (var [pageno, un] in Object.entries(pages)) {
+                    var quant = [];
+                    flat
+                      .filter((res) => res.page == pageno)
+                      .forEach((p) => {
+                        quant.push(p.word);
+                      });
+
+                    quant = [...new Set(quant)];
+                    pages[pageno] = quant;
+
+                    if (quant.length == terms.length) rel.push(pageno);
+                    // console.log(
+                    //   pageno,
+                    //   quant
+                    // );
+                  }
+                  console.log([...new Set(rel)])
+                  // console.log(pages)
+                  // var pages = flat.map(({ page, word }) => {
+                  //   // console.log(word)
+
+                  // });
+
+                  // pages = pages.map((g) => {
+                  //   flat.forEach((p) => {
+                  //     if (p.page == g.page) {
+                  //       // console.log("page")
+                  //     }
+                  //   });
+                  // });
+
+                  // const filteredArray = flat
+                  // .filter((value) => terms.every((term) => term))
+                  // .map((p) => p.page);
+
+                  // console.log("hl", filteredArray);
+
+                  return flat.map((g) => g.page).includes(i);
+                }),
             ]}
           />
         </div>

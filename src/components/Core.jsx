@@ -1,10 +1,8 @@
-  var lineLength = 120;
-
+var lineLength = 120;
 
 function chunkString(str, length) {
   return str.match(new RegExp(".{1," + length + "}", "g"));
 }
-
 
 const loadData = () => {
   return fetch("/pages.txt").then((r) => r.text());
@@ -13,7 +11,7 @@ const loadData = () => {
   // });
 };
 
-const bookSearch = ({pageArray, word}) => {
+const bookSearch = ({ pageArray, word }) => {
   console.log("starting book search");
   console.log("book length", pageArray.length);
 
@@ -21,9 +19,23 @@ const bookSearch = ({pageArray, word}) => {
   // let R, C;
 
   // For searching in all 8 direction
-  let x = [-1, -1, -1, 0, 0, 1, 1, 1];
+  // For searching in all 8 direction
+  let x = [
+    -1, -1, -1, 0, 0, 1, 1, 1,
+    // diagnoal double jumps
+    -2, 2, 2, -2,
+    // vert and hori doubles
+    2, 0, -2,
+  ];
+  let y = [
+    -1, 0, 1, -1, 1, -1, 0, 1,
+    // diagnoal double jumps
+    -2, 2, -2, 2,
+    // vert and hori doubles
+    0, -2, 0,
+  ];
 
-  let y = [-1, 0, 1, -1, 1, -1, 0, 1];
+  var directions = x.length;
 
   function search2D(grid, row, col, word, R, C) {
     // If first character of word
@@ -35,7 +47,7 @@ const bookSearch = ({pageArray, word}) => {
 
     // Search word in all 8 directions
     // starting from (row, col)
-    for (let dir = 0; dir < 8; dir++) {
+    for (let dir = 0; dir < directions; dir++) {
       var progress = [];
       // Initialize starting point
       // for current direction
@@ -101,7 +113,7 @@ const bookSearch = ({pageArray, word}) => {
         // console.log(row, col, word, R, C);
         var result = search2D(grid, row, col, word.toUpperCase(), R, C);
         if (result) {
-          // console.info("pattern found at " + row + ", " + col + "<br>", result);
+          console.info("pattern found at " + row + ", " + col + "<br>", result);
 
           return result;
         }
@@ -113,7 +125,7 @@ const bookSearch = ({pageArray, word}) => {
 
   pageArray.forEach((page, pageNo) => {
     var search = patternSearch(page, word);
-    if (search) results.push(search.map(z=>({...z,page:pageNo})) );
+    if (search) results.push(search.map((z) => ({ ...z, page: pageNo })));
   });
   console.log("finished book search");
 

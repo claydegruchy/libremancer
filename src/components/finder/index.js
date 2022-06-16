@@ -11,9 +11,16 @@ function chunkString(str, length) {
 r = 70;
 
 // For searching in all 8 direction
-let x = [-1, -1, -1, 0, 0, 1, 1, 1];
+let x = [
+// -1, -1, -1, 0, 0, 1, 1, 1,
+-2,2 ,2 ,-2];
+let y = [
+// -1, 0, 1, -1, 1, -1, 0, 1,
+-2 ,2,-2 ,2];
 
-let y = [-1, 0, 1, -1, 1, -1, 0, 1];
+
+
+var directions = x.length
 
 function search2D(grid, row, col, word, R, C) {
     // If first character of word
@@ -25,7 +32,7 @@ function search2D(grid, row, col, word, R, C) {
 
     // Search word in all 8 directions
     // starting from (row, col)
-    for (let dir = 0; dir < 8; dir++) {
+    for (let dir = 0; dir < directions; dir++) {
         var progress = [];
         // Initialize starting point
         // for current direction
